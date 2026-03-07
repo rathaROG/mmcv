@@ -3,7 +3,21 @@ from typing import List, Optional, Union
 
 import torch
 from torch import Tensor
-from torch.nn.parallel._functions import _get_stream
+from torch.nn.parallel._functions import _get_stream as _torch_get_stream
+
+
+TORCH_MAJOR_VER = int(torch.__version__.split('.')[0])
+
+
+def _get_stream(device):
+    if TORCH_MAJOR_VER >= 2:
+        if isinstance(device, int) or isinstance(device, str):
+            device = torch.device(device)
+        return _torch_get_stream(device)
+    else:
+        if isinstance(device, torch.device):
+            device = -1 if device.type == "cpu" else device.index
+        return _torch_get_stream(device)
 
 
 def scatter(input: Union[List, Tensor],

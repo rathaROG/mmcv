@@ -20,6 +20,14 @@ class MMDistributedDataParallel(DistributedDataParallel):
     - It implement two APIs ``train_step()`` and ``val_step()``.
     """
 
+    # Fix for MMCV callers and bevfusionx scripts
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if not hasattr(self, "_use_replicated_tensor_module"):
+            self._use_replicated_tensor_module = False
+        if not hasattr(self, "_replicated_tensor_module"):
+            self._replicated_tensor_module = None
+  
     def to_kwargs(self, inputs: ScatterInputs, kwargs: ScatterInputs,
                   device_id: int) -> Tuple[tuple, tuple]:
         # Use `self.to_kwargs` instead of `self.scatter` in pytorch1.8

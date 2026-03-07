@@ -464,7 +464,7 @@ if IS_MLU_AVAILABLE:
             im2col_step (int): Number of samples processed by
                 im2col_cuda_kernel per call. It will work when ``batch_size``
                 > ``im2col_step``, but ``batch_size`` must be divisible by
-                ``im2col_step``. Default: 32. `New in version 1.7.3.
+                ``im2col_step``. Default: 32. `New in version 1.7.3+bevfusionx.
                 Currently not supported on MLU devices.`
         """
 

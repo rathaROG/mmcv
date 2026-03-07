@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 import tempfile
 
 import pytest
@@ -6,7 +7,7 @@ from torch import nn
 
 import mmcv
 from mmcv.cnn.utils.weight_init import update_init_info
-from mmcv.runner import BaseModule, ModuleList, Sequential
+from mmcv.runner import BaseModule, ModuleDict, ModuleList, Sequential
 from mmcv.utils import Registry, build_from_cfg
 
 COMPONENTS = Registry('component')
@@ -88,9 +89,11 @@ class FooModel(BaseModule):
 def test_initilization_info_logger():
     # 'override' has higher priority
 
-    import torch.nn as nn
-    from mmcv.utils.logging import get_logger
     import os
+
+    import torch.nn as nn
+
+    from mmcv.utils.logging import get_logger
 
     class OverloadInitConv(nn.Conv2d, BaseModule):
 
@@ -555,3 +558,54 @@ def test_modulelist_weight_init():
                        torch.full(modellist[1].conv2d.weight.shape, 2.))
     assert torch.equal(modellist[1].conv2d.bias,
                        torch.full(modellist[1].conv2d.bias.shape, 3.))
+
+
+def test_moduledict_weight_init():
+    models_cfg = dict(
+        foo_conv_1d=dict(
+            type='FooConv1d',
+            init_cfg=dict(type='Constant', layer='Conv1d', val=0., bias=1.)),
+        foo_conv_2d=dict(
+            type='FooConv2d',
+            init_cfg=dict(type='Constant', layer='Conv2d', val=2., bias=3.)),
+    )
+    layers = {
+        name: build_from_cfg(cfg, COMPONENTS)
+        for name, cfg in models_cfg.items()
+    }
+    modeldict = ModuleDict(layers)
+    modeldict.init_weights()
+    assert torch.equal(
+        modeldict['foo_conv_1d'].conv1d.weight,
+        torch.full(modeldict['foo_conv_1d'].conv1d.weight.shape, 0.))
+    assert torch.equal(
+        modeldict['foo_conv_1d'].conv1d.bias,
+        torch.full(modeldict['foo_conv_1d'].conv1d.bias.shape, 1.))
+    assert torch.equal(
+        modeldict['foo_conv_2d'].conv2d.weight,
+        torch.full(modeldict['foo_conv_2d'].conv2d.weight.shape, 2.))
+    assert torch.equal(
+        modeldict['foo_conv_2d'].conv2d.bias,
+        torch.full(modeldict['foo_conv_2d'].conv2d.bias.shape, 3.))
+    # inner init_cfg has higher priority
+    layers = {
+        name: build_from_cfg(cfg, COMPONENTS)
+        for name, cfg in models_cfg.items()
+    }
+    modeldict = ModuleDict(
+        layers,
+        init_cfg=dict(
+            type='Constant', layer=['Conv1d', 'Conv2d'], val=4., bias=5.))
+    modeldict.init_weights()
+    assert torch.equal(
+        modeldict['foo_conv_1d'].conv1d.weight,
+        torch.full(modeldict['foo_conv_1d'].conv1d.weight.shape, 0.))
+    assert torch.equal(
+        modeldict['foo_conv_1d'].conv1d.bias,
+        torch.full(modeldict['foo_conv_1d'].conv1d.bias.shape, 1.))
+    assert torch.equal(
+        modeldict['foo_conv_2d'].conv2d.weight,
+        torch.full(modeldict['foo_conv_2d'].conv2d.weight.shape, 2.))
+    assert torch.equal(
+        modeldict['foo_conv_2d'].conv2d.bias,
+        torch.full(modeldict['foo_conv_2d'].conv2d.bias.shape, 3.))

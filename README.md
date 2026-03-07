@@ -6,13 +6,13 @@
 
 OpenMMLab [MMCV](https://github.com/open-mmlab/mmcv) is a foundational library for computer vision research and it provides the following functionalities:
 
-- [Universal IO APIs](https://mmcv.readthedocs.io/en/v1.6.2/understand_mmcv/io.html)
-- [Image/Video processing](https://mmcv.readthedocs.io/en/v1.6.2/understand_mmcv/data_process.html)
-- [Image and annotation visualization](https://mmcv.readthedocs.io/en/v1.6.2/understand_mmcv/visualization.html)
-- [Useful utilities (progress bar, timer, ...)](https://mmcv.readthedocs.io/en/v1.6.2/understand_mmcv/utils.html)
-- [PyTorch runner with hooking mechanism](https://mmcv.readthedocs.io/en/v1.6.2/understand_mmcv/runner.html)
-- [Various CNN architectures](https://mmcv.readthedocs.io/en/v1.6.2/understand_mmcv/cnn.html)
-- [High-quality implementation of common CPU and CUDA ops](https://mmcv.readthedocs.io/en/v1.6.2/understand_mmcv/ops.html)
+- [Universal IO APIs](https://mmcv.readthedocs.io/en/v1.7.0/understand_mmcv/io.html)
+- [Image/Video processing](https://mmcv.readthedocs.io/en/v1.7.0/understand_mmcv/data_process.html)
+- [Image and annotation visualization](https://mmcv.readthedocs.io/en/v1.7.0/understand_mmcv/visualization.html)
+- [Useful utilities (progress bar, timer, ...)](https://mmcv.readthedocs.io/en/v1.7.0/understand_mmcv/utils.html)
+- [PyTorch runner with hooking mechanism](https://mmcv.readthedocs.io/en/v1.7.0/understand_mmcv/runner.html)
+- [Various CNN architectures](https://mmcv.readthedocs.io/en/v1.7.0/understand_mmcv/cnn.html)
+- [High-quality implementation of common CPU and CUDA ops](https://mmcv.readthedocs.io/en/v1.7.0/understand_mmcv/ops.html)
 
 ---
 

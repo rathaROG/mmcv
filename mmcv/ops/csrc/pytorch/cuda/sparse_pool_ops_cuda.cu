@@ -1,8 +1,11 @@
 #include <cuda_runtime_api.h>
 #include <torch/script.h>
+// clang-format off
+// TODO: make spconv_utils.h order agnostic
+#include "../spconv_utils.h"
+// clang-format on
 #include <utils/spconv/spconv/maxpool.h>
 
-#include "../spconv_utils.h"
 #include "pytorch_cuda_helper.hpp"
 
 torch::Tensor IndiceMaxpoolForwardCUDAKernelLauncher(torch::Tensor features,

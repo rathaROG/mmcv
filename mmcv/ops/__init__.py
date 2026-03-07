@@ -1,4 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+from mmcv.utils import IS_MLU_AVAILABLE
 from .active_rotated_filter import active_rotated_filter
 from .assign_score_withk import assign_score_withk
 from .ball_query import ball_query
@@ -106,3 +107,9 @@ __all__ = [
     'diff_iou_rotated_2d', 'diff_iou_rotated_3d', 'chamfer_distance',
     'PrRoIPool', 'prroi_pool'
 ]
+
+if IS_MLU_AVAILABLE:
+    from .deform_conv import DeformConv2dPack_MLU  # noqa:F401
+    from .modulated_deform_conv import \
+        ModulatedDeformConv2dPack_MLU  # noqa:F401
+    __all__.extend(['ModulatedDeformConv2dPack_MLU', 'DeformConv2dPack_MLU'])

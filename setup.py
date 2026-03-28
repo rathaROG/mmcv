@@ -317,6 +317,7 @@ def get_extensions():
             print(f"\n\nCUDA arches for NVCC: {arches}")
             print(f"\n\nNVCC gencode flag: {gencode_flag}\n\n")
 
+            extra_compile_args['nvcc'] = []
             if cuda_args:
                 extra_compile_args['nvcc'] += [cuda_args]
             if gencode_flag:

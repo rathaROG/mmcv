@@ -311,10 +311,17 @@ def get_extensions():
                     ),
                     exclude="10.1"  # PyTorch has never included 10.1; avoid error with CUDA 12.8 and 12.9
                 )
-            print(f"\n\nCUDA args to be passed to NVCC: {cuda_args}")
-            print(f"\n\nCUDA arches to be built: {arches}\n\n")
+            gencode_flag = nvidia_arch.make_gencode_flags(arches, add_ptx=True)
 
-            extra_compile_args['nvcc'] = [cuda_args] + nvidia_arch.make_gencode_flags(arches, add_ptx=True)
+            print(f"\n\nCUDA args for NVCC: {cuda_args}")
+            print(f"\n\nCUDA arches for NVCC: {arches}")
+            print(f"\n\nNVCC gencode flag: {gencode_flag}\n\n")
+
+            if cuda_args:
+                extra_compile_args['nvcc'] += [cuda_args]
+            if gencode_flag:
+                extra_compile_args['nvcc'] += gencode_flag
+
             if is_rocm_pytorch and platform.system() != 'Windows':
                 extra_compile_args['nvcc'] += \
                     ['--gpu-max-threads-per-block=1024']

@@ -294,8 +294,25 @@ def get_extensions():
             if is_rocm_pytorch:
                 define_macros += [('MMCV_WITH_HIP', None)]
             define_macros += [('MMCV_WITH_CUDA', None)]
-            cuda_args = os.getenv('MMCV_CUDA_ARGS')
-            extra_compile_args['nvcc'] = [cuda_args] if cuda_args else []
+            cuda_args = os.getenv('MMCV_CUDA_ARGS', [])
+
+            import nvidia_arch
+            arches = os.getenv("BEVX_CUDA_ARCH_LIST")
+            if not arches:
+                arches = os.getenv("TORCH_CUDA_ARCH_LIST")
+            if arches is not None:
+                arches = nvidia_arch.validate_arch_string(arches)
+            else:
+                arches = nvidia_arch.normalize_arches(
+                    nvidia_arch.get_arches(
+                        cuda_ver=torch.version.cuda,
+                        gpu_type=os.getenv("BEVX_GPU_TYPE", "cons+jets"),
+                        min_sm=os.getenv("BEVX_MIN_SM", "60"),
+                    ),
+                    exclude="10.1"  # PyTorch has never included 10.1; avoid error with CUDA 12.8 and 12.9
+                )
+
+            extra_compile_args['nvcc'] = [cuda_args] + nvidia_arch.make_gencode_flags(arches, add_ptx=True)
             if is_rocm_pytorch and platform.system() != 'Windows':
                 extra_compile_args['nvcc'] += \
                     ['--gpu-max-threads-per-block=1024']

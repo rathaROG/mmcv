@@ -311,6 +311,8 @@ def get_extensions():
                     ),
                     exclude="10.1"  # PyTorch has never included 10.1; avoid error with CUDA 12.8 and 12.9
                 )
+            print(f"\n\nCUDA args to be passed to NVCC: {cuda_args}")
+            print(f"\n\nCUDA arches to be built: {arches}\n\n")
 
             extra_compile_args['nvcc'] = [cuda_args] + nvidia_arch.make_gencode_flags(arches, add_ptx=True)
             if is_rocm_pytorch and platform.system() != 'Windows':
@@ -487,6 +489,8 @@ def get_extensions():
                 extra_compile_args['nvcc'] += ['-std=c++14']
             else:
                 extra_compile_args['nvcc'] += ['-std=c++17']
+
+        print(f"\n\n\nextra_compile_args['nvcc']: {extra_compile_args['nvcc']}\n\n\n")
 
         ext_ops = extension(
             name=ext_name,

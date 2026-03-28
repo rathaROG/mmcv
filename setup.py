@@ -294,7 +294,7 @@ def get_extensions():
             if is_rocm_pytorch:
                 define_macros += [('MMCV_WITH_HIP', None)]
             define_macros += [('MMCV_WITH_CUDA', None)]
-            cuda_args = os.getenv('MMCV_CUDA_ARGS', [])
+            cuda_args = os.getenv('MMCV_CUDA_ARGS')
 
             import nvidia_arch
             arches = os.getenv("BEVX_CUDA_ARCH_LIST")

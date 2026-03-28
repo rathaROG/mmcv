@@ -1,7 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from packaging.version import parse as _parse_version
 
-__version__ = '1.7.3+bevfusionx'
+__version__ = '1.7.4+bevfusionx'
 
 
 def parse_version_info(version_str: str, length: int = 4) -> tuple:
